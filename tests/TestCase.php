@@ -4,7 +4,6 @@ namespace Laravilt\Users\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravilt\Users\Tests\Database\Factories\UserFactory;
 use Laravilt\Users\Tests\Models\User;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Permission\PermissionServiceProvider;
