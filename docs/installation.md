@@ -143,7 +143,7 @@ After installation, verify everything is working:
 Ensure you've run the setup permissions command:
 
 ```bash
-php artisan laravilt:users:setup-permissions
+php artisan laravilt:secure
 ```
 
 ### Missing Traits

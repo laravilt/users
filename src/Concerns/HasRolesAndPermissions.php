@@ -68,9 +68,9 @@ trait HasRolesAndPermissions
     }
 
     /**
-     * Get all role names for this user.
+     * Get all role names for this user as an array.
      */
-    public function getRoleNames(): array
+    public function getRoleNamesArray(): array
     {
         return $this->roles->pluck('name')->toArray();
     }

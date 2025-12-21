@@ -13,7 +13,7 @@ Laravilt Users uses [Spatie Laravel Permission](https://spatie.be/docs/laravel-p
 Run the setup command to generate permissions for all resources:
 
 ```bash
-php artisan laravilt:users:setup-permissions
+php artisan laravilt:secure
 ```
 
 This creates permissions in the format: `{action}_{resource}`

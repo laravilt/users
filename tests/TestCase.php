@@ -25,6 +25,7 @@ class TestCase extends Orchestra
     {
         return [
             PermissionServiceProvider::class,
+            \Spatie\MediaLibrary\MediaLibraryServiceProvider::class,
             \Laravilt\Support\SupportServiceProvider::class,
             \Laravilt\Forms\FormsServiceProvider::class,
             \Laravilt\Tables\TablesServiceProvider::class,
@@ -73,6 +74,10 @@ class TestCase extends Orchestra
         config()->set('permission.column_names.permission_pivot_key', 'permission_id');
         config()->set('permission.column_names.model_morph_key', 'model_id');
         config()->set('permission.column_names.team_foreign_key', 'team_id');
+
+        // Configure media library package
+        config()->set('media-library.media_model', \Spatie\MediaLibrary\MediaCollections\Models\Media::class);
+        config()->set('media-library.disk_name', 'public');
     }
 
     protected function defineDatabaseMigrations(): void

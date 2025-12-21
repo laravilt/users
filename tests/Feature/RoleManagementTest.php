@@ -6,6 +6,11 @@ use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
     $this->actingAsUser();
+
+    // Create test permissions
+    Permission::findOrCreate('edit articles', 'web');
+    Permission::findOrCreate('delete articles', 'web');
+    Permission::findOrCreate('publish articles', 'web');
 });
 
 describe('Role Model', function () {
@@ -79,7 +84,7 @@ describe('Role Model', function () {
 describe('Role Permissions', function () {
     it('can assign permission to role', function () {
         $role = Role::create(['name' => 'editor', 'guard_name' => 'web']);
-        $permission = Permission::create(['name' => 'edit articles', 'guard_name' => 'web']);
+        $permission = Permission::findByName('edit articles', 'web');
 
         $role->givePermissionTo($permission);
 
@@ -88,8 +93,7 @@ describe('Role Permissions', function () {
 
     it('can assign multiple permissions to role', function () {
         $role = Role::create(['name' => 'editor', 'guard_name' => 'web']);
-        Permission::create(['name' => 'edit articles', 'guard_name' => 'web']);
-        Permission::create(['name' => 'delete articles', 'guard_name' => 'web']);
+        // Permissions already created in beforeEach
 
         $role->givePermissionTo(['edit articles', 'delete articles']);
 
@@ -111,9 +115,7 @@ describe('Role Permissions', function () {
 
     it('can sync permissions for role', function () {
         $role = Role::create(['name' => 'editor', 'guard_name' => 'web']);
-        Permission::create(['name' => 'edit articles', 'guard_name' => 'web']);
-        Permission::create(['name' => 'delete articles', 'guard_name' => 'web']);
-        Permission::create(['name' => 'publish articles', 'guard_name' => 'web']);
+        // Permissions already created in beforeEach
 
         $role->givePermissionTo(['edit articles', 'delete articles']);
         expect($role->permissions)->toHaveCount(2);

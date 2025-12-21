@@ -2,11 +2,15 @@
 
 use Laravilt\Users\Services\ImpersonationService;
 use Laravilt\Users\Tests\Models\User;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
     $this->admin = $this->actingAsUser();
     $this->impersonationService = app(ImpersonationService::class);
+
+    // Create test permissions
+    Permission::findOrCreate('impersonate users', 'web');
 });
 
 describe('Impersonation Service', function () {

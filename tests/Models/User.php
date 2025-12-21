@@ -5,11 +5,14 @@ namespace Laravilt\Users\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravilt\Users\Concerns\HasAvatar;
 use Laravilt\Users\Concerns\HasRolesAndPermissions;
 use Laravilt\Users\Tests\Database\Factories\UserFactory;
+use Spatie\MediaLibrary\HasMedia;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
+    use HasAvatar;
     use HasFactory;
     use HasRolesAndPermissions;
     use Notifiable;

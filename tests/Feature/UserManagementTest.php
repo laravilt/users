@@ -1,10 +1,16 @@
 <?php
 
 use Laravilt\Users\Tests\Models\User;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
     $this->actingAsUser();
+
+    // Create test permissions
+    Permission::findOrCreate('edit articles', 'web');
+    Permission::findOrCreate('delete articles', 'web');
+    Permission::findOrCreate('publish articles', 'web');
 });
 
 describe('User Model', function () {

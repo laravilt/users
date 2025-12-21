@@ -173,7 +173,7 @@ class User extends Authenticatable
 Run the setup command to create permissions for all resources:
 
 ```bash
-php artisan laravilt:users:setup-permissions
+php artisan laravilt:secure
 ```
 
 This creates permissions like:
