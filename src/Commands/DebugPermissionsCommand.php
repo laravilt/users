@@ -35,7 +35,7 @@ class DebugPermissionsCommand extends Command
 
         // Check if User model has HasRoles trait
         if (! method_exists($userModel, 'hasRole')) {
-            warning("User model does NOT have HasRoles trait!");
+            warning('User model does NOT have HasRoles trait!');
             warning("Add 'use Spatie\\Permission\\Traits\\HasRoles;' to your User model");
 
             return self::FAILURE;
