@@ -79,12 +79,19 @@ return [
     | Super Admin Configuration
     |--------------------------------------------------------------------------
     |
-    | Configure the super admin role that has unrestricted access.
+    | Configure the super admin role behavior.
+    |
+    | - enabled: Whether the super admin role feature is enabled
+    | - role: The name of the super admin role
+    | - bypass_permissions: When true, super_admin bypasses ALL permission checks
+    |   When false (default), super_admin respects assigned permissions like any other role
+    | - define_via_gate: Whether to use Laravel Gate::before for the bypass
     |
     */
     'super_admin' => [
         'enabled' => true,
         'role' => 'super_admin',
+        'bypass_permissions' => false, // Set to true to give super_admin full access regardless of permissions
         'define_via_gate' => false,
     ],
 

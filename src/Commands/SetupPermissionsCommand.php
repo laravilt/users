@@ -12,6 +12,7 @@ use Laravilt\Panel\Resources\Resource;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
+use function Laravel\Prompts\search;
 use function Laravel\Prompts\spin;
 use function Laravel\Prompts\table;
 use function Laravel\Prompts\warning;
@@ -21,6 +22,7 @@ class SetupPermissionsCommand extends Command
     protected $signature = 'laravilt:secure
                             {--fresh : Delete all existing permissions and roles before creating}
                             {--super-admin : Create the super admin role}
+                            {--assign-super-admin : Assign super admin role to a user}
                             {--generate-seeder : Generate a seeder file for production deployment}
                             {--panel= : Only generate permissions for a specific panel}
                             {--exclude=* : Exclude specific resources from permission generation}
@@ -119,6 +121,11 @@ class SetupPermissionsCommand extends Command
         );
 
         info('Roles created successfully.');
+
+        // Assign super admin role to a user if requested
+        if ($this->option('assign-super-admin')) {
+            $this->assignSuperAdminToUser($guardName);
+        }
 
         // Clear cache
         app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
@@ -458,5 +465,76 @@ PHP;
     protected function getRoleModel(): string
     {
         return config('permission.models.role', \Spatie\Permission\Models\Role::class);
+    }
+
+    protected function assignSuperAdminToUser(string $guardName): void
+    {
+        $userModel = $this->getUserModel();
+
+        // Check if there are any users
+        if ($userModel::count() === 0) {
+            warning('No users found in the database. Please create a user first.');
+
+            return;
+        }
+
+        // Use search to find a user
+        $userId = search(
+            label: 'Search for a user to assign the super_admin role:',
+            options: function (string $value) use ($userModel) {
+                if (strlen($value) < 1) {
+                    return $userModel::query()
+                        ->limit(10)
+                        ->get()
+                        ->mapWithKeys(fn ($user) => [$user->id => "{$user->name} ({$user->email})"])
+                        ->all();
+                }
+
+                return $userModel::query()
+                    ->where('name', 'like', "%{$value}%")
+                    ->orWhere('email', 'like', "%{$value}%")
+                    ->limit(10)
+                    ->get()
+                    ->mapWithKeys(fn ($user) => [$user->id => "{$user->name} ({$user->email})"])
+                    ->all();
+            },
+            placeholder: 'Type to search by name or email...',
+            hint: 'Select the user to become super admin',
+        );
+
+        if (! $userId) {
+            warning('No user selected. Skipping super admin assignment.');
+
+            return;
+        }
+
+        $user = $userModel::find($userId);
+
+        if (! $user) {
+            error('User not found.');
+
+            return;
+        }
+
+        // Assign super_admin role
+        $roleModel = $this->getRoleModel();
+        $superAdminRole = $roleModel::where('name', 'super_admin')
+            ->where('guard_name', $guardName)
+            ->first();
+
+        if (! $superAdminRole) {
+            error('super_admin role not found. Please ensure it was created.');
+
+            return;
+        }
+
+        $user->assignRole($superAdminRole);
+
+        info("Super admin role assigned to: {$user->name} ({$user->email})");
+    }
+
+    protected function getUserModel(): string
+    {
+        return config('laravilt-users.model', config('auth.providers.users.model', 'App\\Models\\User'));
     }
 }

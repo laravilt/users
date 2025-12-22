@@ -16,6 +16,29 @@ Run the setup command to generate permissions for all resources:
 php artisan laravilt:secure
 ```
 
+### Command Options
+
+| Option | Description |
+|--------|-------------|
+| `--fresh` | Delete all existing permissions and roles before creating |
+| `--super-admin` | Create the super admin role |
+| `--assign-super-admin` | Search and select a user to assign the super_admin role |
+| `--generate-seeder` | Generate a seeder file for production deployment |
+| `--panel=` | Only generate permissions for a specific panel |
+| `--exclude=*` | Exclude specific resources from permission generation |
+| `--only=*` | Only generate permissions for specific resources |
+| `--dry-run` | Show what would be created without actually creating |
+
+### Assign Super Admin to a User
+
+To assign the super_admin role to a user during setup:
+
+```bash
+php artisan laravilt:secure --assign-super-admin
+```
+
+This will prompt you to search and select a user by name or email.
+
 This creates permissions in the format: `{action}_{resource}`
 
 Example permissions created:

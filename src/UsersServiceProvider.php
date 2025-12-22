@@ -3,6 +3,7 @@
 namespace Laravilt\Users;
 
 use Illuminate\Support\ServiceProvider;
+use Laravilt\Users\Commands\DebugPermissionsCommand;
 use Laravilt\Users\Commands\InstallUsersCommand;
 use Laravilt\Users\Commands\SetupPermissionsCommand;
 use Laravilt\Users\Services\ImpersonationService;
@@ -61,6 +62,7 @@ class UsersServiceProvider extends ServiceProvider
 
             // Register commands
             $this->commands([
+                DebugPermissionsCommand::class,
                 InstallUsersCommand::class,
                 SetupPermissionsCommand::class,
             ]);
@@ -72,22 +74,24 @@ class UsersServiceProvider extends ServiceProvider
 
     /**
      * Register the super admin gate.
+     * Only registers if both bypass_permissions and define_via_gate are enabled.
      */
     protected function registerSuperAdminGate(): void
     {
-        if (! config('laravilt-users.super_admin.enabled', true)) {
+        // Only apply Gate bypass if bypass_permissions is explicitly enabled
+        $bypassPermissions = config('laravilt-users.super_admin.bypass_permissions', false);
+        $useGate = config('laravilt-users.super_admin.define_via_gate', false);
+
+        if (! $bypassPermissions || ! $useGate) {
             return;
         }
 
         $superAdminRole = config('laravilt-users.super_admin.role', 'super_admin');
-        $useGate = config('laravilt-users.super_admin.define_via_gate', false);
 
-        if ($useGate) {
-            \Illuminate\Support\Facades\Gate::before(function ($user, $ability) use ($superAdminRole) {
-                if (method_exists($user, 'hasRole') && $user->hasRole($superAdminRole)) {
-                    return true;
-                }
-            });
-        }
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) use ($superAdminRole) {
+            if (method_exists($user, 'hasRole') && $user->hasRole($superAdminRole)) {
+                return true;
+            }
+        });
     }
 }
