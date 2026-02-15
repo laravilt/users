@@ -23,7 +23,7 @@
     "require": {
         "php": "^8.3|^8.4",
         "spatie/laravel-package-tools": "^1.14",
-        "spatie/laravel-permission": "^6.0",
+        "spatie/laravel-permission": "^6.0 || ^7.0",
         "spatie/laravel-medialibrary": "^11.0",
         "laravilt/laravilt": "^1.0"
     },
