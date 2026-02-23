@@ -1,7 +1,7 @@
 {
     "name": "laravilt/users",
     "description": "User and Role management plugin for Laravilt - Full RBAC system with impersonation support",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "library",
     "license": "MIT",
     "keywords": [
