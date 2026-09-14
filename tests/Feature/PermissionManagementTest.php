@@ -1,8 +1,10 @@
 <?php
 
 use Laravilt\Users\Tests\Models\User;
+use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     $this->actingAsUser();
@@ -57,7 +59,7 @@ describe('Permission Model', function () {
         expect(fn () => Permission::create([
             'name' => 'edit articles',
             'guard_name' => 'web',
-        ]))->toThrow(\Spatie\Permission\Exceptions\PermissionAlreadyExists::class);
+        ]))->toThrow(PermissionAlreadyExists::class);
     });
 
     it('allows same permission name for different guards', function () {
@@ -221,7 +223,7 @@ describe('Permission Cache', function () {
         $permission = Permission::create(['name' => 'cached permission', 'guard_name' => 'web']);
 
         // Clear cache
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Permission should still be retrievable
         expect(Permission::findByName('cached permission'))->toBeInstanceOf(Permission::class);

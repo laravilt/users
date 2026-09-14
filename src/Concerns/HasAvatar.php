@@ -3,6 +3,7 @@
 namespace Laravilt\Users\Concerns;
 
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 trait HasAvatar
 {
@@ -59,7 +60,7 @@ trait HasAvatar
     /**
      * Get the avatar media.
      */
-    public function getAvatar(): ?\Spatie\MediaLibrary\MediaCollections\Models\Media
+    public function getAvatar(): ?Media
     {
         $collection = config('laravilt-users.avatar.collection', 'avatar');
 

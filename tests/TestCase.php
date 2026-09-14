@@ -4,8 +4,17 @@ namespace Laravilt\Users\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravilt\Actions\ActionsServiceProvider;
+use Laravilt\Forms\FormsServiceProvider;
+use Laravilt\Support\SupportServiceProvider;
+use Laravilt\Tables\TablesServiceProvider;
 use Laravilt\Users\Tests\Models\User;
+use Laravilt\Users\UsersServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionServiceProvider;
 
 class TestCase extends Orchestra
@@ -25,12 +34,12 @@ class TestCase extends Orchestra
     {
         return [
             PermissionServiceProvider::class,
-            \Spatie\MediaLibrary\MediaLibraryServiceProvider::class,
-            \Laravilt\Support\SupportServiceProvider::class,
-            \Laravilt\Forms\FormsServiceProvider::class,
-            \Laravilt\Tables\TablesServiceProvider::class,
-            \Laravilt\Actions\ActionsServiceProvider::class,
-            \Laravilt\Users\UsersServiceProvider::class,
+            MediaLibraryServiceProvider::class,
+            SupportServiceProvider::class,
+            FormsServiceProvider::class,
+            TablesServiceProvider::class,
+            ActionsServiceProvider::class,
+            UsersServiceProvider::class,
         ];
     }
 
@@ -68,15 +77,15 @@ class TestCase extends Orchestra
         ]);
 
         // Configure permission package
-        config()->set('permission.models.permission', \Spatie\Permission\Models\Permission::class);
-        config()->set('permission.models.role', \Spatie\Permission\Models\Role::class);
+        config()->set('permission.models.permission', Permission::class);
+        config()->set('permission.models.role', Role::class);
         config()->set('permission.column_names.role_pivot_key', 'role_id');
         config()->set('permission.column_names.permission_pivot_key', 'permission_id');
         config()->set('permission.column_names.model_morph_key', 'model_id');
         config()->set('permission.column_names.team_foreign_key', 'team_id');
 
         // Configure media library package
-        config()->set('media-library.media_model', \Spatie\MediaLibrary\MediaCollections\Models\Media::class);
+        config()->set('media-library.media_model', Media::class);
         config()->set('media-library.disk_name', 'public');
     }
 

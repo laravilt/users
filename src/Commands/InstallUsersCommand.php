@@ -2,10 +2,14 @@
 
 namespace Laravilt\Users\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\info;
@@ -135,7 +139,7 @@ class InstallUsersCommand extends Command
      */
     protected function addHasRolesToUserModel(): void
     {
-        $userModelClass = config('laravilt-users.model', \App\Models\User::class);
+        $userModelClass = config('laravilt-users.model', User::class);
         $reflection = new \ReflectionClass($userModelClass);
         $filePath = $reflection->getFileName();
 
@@ -220,8 +224,8 @@ class InstallUsersCommand extends Command
     protected function setupPermissions(): void
     {
         $guardName = config('laravilt-users.guard_name', 'web');
-        $permissionModel = config('permission.models.permission', \Spatie\Permission\Models\Permission::class);
-        $roleModel = config('permission.models.role', \Spatie\Permission\Models\Role::class);
+        $permissionModel = config('permission.models.permission', Permission::class);
+        $roleModel = config('permission.models.role', Role::class);
 
         $defaultPermissions = [
             'view_any_users',
@@ -287,7 +291,7 @@ class InstallUsersCommand extends Command
         }, 'Creating roles...');
 
         // Clear cache
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         info('Permissions and roles created successfully.');
     }

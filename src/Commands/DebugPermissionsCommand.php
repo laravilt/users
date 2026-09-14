@@ -3,6 +3,9 @@
 namespace Laravilt\Users\Commands;
 
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\table;
@@ -23,7 +26,7 @@ class DebugPermissionsCommand extends Command
         info('=======================');
 
         // Check if Spatie Permission is installed
-        if (! class_exists(\Spatie\Permission\Models\Permission::class)) {
+        if (! class_exists(Permission::class)) {
             warning('Spatie Permission package is NOT installed!');
 
             return self::FAILURE;
@@ -44,8 +47,8 @@ class DebugPermissionsCommand extends Command
         info('User Model HasRoles Trait: ✓');
 
         // Count permissions and roles
-        $permissionModel = config('permission.models.permission', \Spatie\Permission\Models\Permission::class);
-        $roleModel = config('permission.models.role', \Spatie\Permission\Models\Role::class);
+        $permissionModel = config('permission.models.permission', Permission::class);
+        $roleModel = config('permission.models.role', Role::class);
 
         $permissionCount = $permissionModel::where('guard_name', $guardName)->count();
         $roleCount = $roleModel::where('guard_name', $guardName)->count();
@@ -122,7 +125,7 @@ class DebugPermissionsCommand extends Command
         // Clear permission cache
         $this->newLine();
         info('Clearing permission cache...');
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
         info('Permission cache cleared! ✓');
 
         return self::SUCCESS;

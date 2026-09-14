@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Laravilt\Panel\PanelRegistry;
 use Laravilt\Panel\Resources\Resource;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
@@ -128,7 +131,7 @@ class SetupPermissionsCommand extends Command
         }
 
         // Clear cache
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         info('Permission cache cleared.');
 
@@ -459,12 +462,12 @@ PHP;
 
     protected function getPermissionModel(): string
     {
-        return config('permission.models.permission', \Spatie\Permission\Models\Permission::class);
+        return config('permission.models.permission', Permission::class);
     }
 
     protected function getRoleModel(): string
     {
-        return config('permission.models.role', \Spatie\Permission\Models\Role::class);
+        return config('permission.models.role', Role::class);
     }
 
     protected function assignSuperAdminToUser(string $guardName): void

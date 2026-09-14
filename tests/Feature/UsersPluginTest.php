@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\CustomUser;
+use App\Models\User;
 use Laravilt\Users\UsersPlugin;
 
 describe('Users Plugin', function () {
@@ -80,17 +82,17 @@ describe('Users Plugin', function () {
 
     it('can set custom user model', function () {
         $plugin = UsersPlugin::make()
-            ->userModel(\App\Models\User::class);
+            ->userModel(User::class);
 
-        expect($plugin->getUserModel())->toBe(\App\Models\User::class);
+        expect($plugin->getUserModel())->toBe(User::class);
     });
 
     it('uses default user model from config', function () {
-        config()->set('laravilt-users.model', \App\Models\CustomUser::class);
+        config()->set('laravilt-users.model', CustomUser::class);
 
         $plugin = UsersPlugin::make();
 
-        expect($plugin->getUserModel())->toBe(\App\Models\CustomUser::class);
+        expect($plugin->getUserModel())->toBe(CustomUser::class);
     });
 });
 

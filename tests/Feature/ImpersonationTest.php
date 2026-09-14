@@ -1,5 +1,7 @@
 <?php
 
+use Laravilt\Users\Exceptions\CannotImpersonateSelfException;
+use Laravilt\Users\Exceptions\CannotImpersonateSuperAdminException;
 use Laravilt\Users\Services\ImpersonationService;
 use Laravilt\Users\Tests\Models\User;
 use Spatie\Permission\Models\Permission;
@@ -59,7 +61,7 @@ describe('Impersonation Service', function () {
 
     it('cannot impersonate self', function () {
         expect(fn () => $this->impersonationService->impersonate($this->admin, $this->admin))
-            ->toThrow(\Laravilt\Users\Exceptions\CannotImpersonateSelfException::class);
+            ->toThrow(CannotImpersonateSelfException::class);
     });
 
     it('prevents impersonating super admin by default', function () {
@@ -68,7 +70,7 @@ describe('Impersonation Service', function () {
         $superAdmin->assignRole('super_admin');
 
         expect(fn () => $this->impersonationService->impersonate($this->admin, $superAdmin))
-            ->toThrow(\Laravilt\Users\Exceptions\CannotImpersonateSuperAdminException::class);
+            ->toThrow(CannotImpersonateSuperAdminException::class);
     });
 });
 

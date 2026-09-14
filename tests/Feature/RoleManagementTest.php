@@ -1,6 +1,7 @@
 <?php
 
 use Laravilt\Users\Tests\Models\User;
+use Spatie\Permission\Exceptions\RoleAlreadyExists;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -62,7 +63,7 @@ describe('Role Model', function () {
         expect(fn () => Role::create([
             'name' => 'admin',
             'guard_name' => 'web',
-        ]))->toThrow(\Spatie\Permission\Exceptions\RoleAlreadyExists::class);
+        ]))->toThrow(RoleAlreadyExists::class);
     });
 
     it('allows same role name for different guards', function () {

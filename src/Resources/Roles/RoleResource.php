@@ -13,6 +13,7 @@ use Laravilt\Users\Resources\Roles\Schemas\RoleForm;
 use Laravilt\Users\Resources\Roles\Schemas\RoleInfolist;
 use Laravilt\Users\Resources\Roles\Tables\RolesTable;
 use Laravilt\Users\UsersPlugin;
+use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
@@ -22,7 +23,7 @@ class RoleResource extends Resource
 
     public static function getModel(): string
     {
-        return config('laravilt-users.role_model', \Spatie\Permission\Models\Role::class);
+        return config('laravilt-users.role_model', Role::class);
     }
 
     public static function getNavigationGroup(): ?string

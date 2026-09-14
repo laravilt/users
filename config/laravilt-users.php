@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\User;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -20,7 +24,7 @@ return [
     | This should be a model that uses the HasRolesAndPermissions trait.
     |
     */
-    'model' => \App\Models\User::class,
+    'model' => User::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -148,7 +152,7 @@ return [
     | The role model to use. Defaults to Spatie's Role model.
     |
     */
-    'role_model' => \Spatie\Permission\Models\Role::class,
+    'role_model' => Role::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -158,7 +162,7 @@ return [
     | The permission model to use. Defaults to Spatie's Permission model.
     |
     */
-    'permission_model' => \Spatie\Permission\Models\Permission::class,
+    'permission_model' => Permission::class,
 
     /*
     |--------------------------------------------------------------------------

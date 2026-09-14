@@ -2,6 +2,7 @@
 
 namespace Laravilt\Users;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravilt\Users\Commands\DebugPermissionsCommand;
 use Laravilt\Users\Commands\InstallUsersCommand;
@@ -88,7 +89,7 @@ class UsersServiceProvider extends ServiceProvider
 
         $superAdminRole = config('laravilt-users.super_admin.role', 'super_admin');
 
-        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) use ($superAdminRole) {
+        Gate::before(function ($user, $ability) use ($superAdminRole) {
             if (method_exists($user, 'hasRole') && $user->hasRole($superAdminRole)) {
                 return true;
             }
