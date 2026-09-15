@@ -5,7 +5,9 @@ namespace Laravilt\Users\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Laravilt\Users\Services\ImpersonationService;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImpersonationBanner
 {
@@ -20,8 +22,8 @@ class ImpersonationBanner
     {
         $response = $next($request);
 
-        // Only inject banner for HTML responses
-        if (! $this->isHtmlResponse($response)) {
+        // Only inject banner for HTML responses (streamed/file responses cannot have their content replaced)
+        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse || ! $this->isHtmlResponse($response)) {
             return $response;
         }
 
@@ -61,8 +63,10 @@ class ImpersonationBanner
      */
     protected function renderBanner(): string
     {
-        $impersonator = $this->impersonationService->getImpersonator();
-        $stopUrl = route('laravilt.users.stop-impersonation');
+        // The name is user-controlled: escape it (and the rest) before injecting into the page
+        $impersonatorName = e($this->impersonationService->getImpersonator()?->name ?? '');
+        $stopUrl = e(route('laravilt.users.stop-impersonation'));
+        $csrfToken = e($this->getCsrfToken());
 
         return <<<HTML
         <div id="impersonation-banner" style="
@@ -81,9 +85,9 @@ class ImpersonationBanner
             font-family: system-ui, -apple-system, sans-serif;
             font-size: 14px;
         ">
-            <span>You are impersonating as <strong>{$impersonator?->name}</strong></span>
+            <span>You are impersonating as <strong>{$impersonatorName}</strong></span>
             <form action="{$stopUrl}" method="POST" style="margin: 0;">
-                <input type="hidden" name="_token" value="{$this->getCsrfToken()}">
+                <input type="hidden" name="_token" value="{$csrfToken}">
                 <button type="submit" style="
                     background: #ef4444;
                     color: white;

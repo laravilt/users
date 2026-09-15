@@ -44,8 +44,10 @@ trait HasRolesAndPermissions
             return true;
         }
 
-        // Check if user has impersonate permission
-        if ($this->hasPermissionTo('impersonate users')) {
+        // Check if user has impersonate permission. checkPermissionTo() returns false instead of
+        // throwing PermissionDoesNotExist when the permission has not been seeded yet, which would
+        // otherwise crash every users table render (ImpersonateAction::visible calls this per row).
+        if ($this->checkPermissionTo('impersonate users')) {
             return true;
         }
 
